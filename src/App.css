@@ -1,0 +1,22 @@
+#root {
+  background: rgb(101,198,240);
+  background: linear-gradient(180deg, rgba(101,198,240,1) 26%, rgba(1,136,179,1) 74%);
+}
+
+body {
+  margin: 0px;
+  padding: 0px;
+}
+
+.header-title {
+  display: flex;
+  justify-content: center;
+}
+
+.header-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  color: #ffcb05;
+}
