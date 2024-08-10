@@ -12,7 +12,7 @@ export default function CardGame() {
             <>
             <div className='header-container'>
                <div className='header-title'>
-                 <img src={logo} alt="Pokey Logo" width="600px" />
+                 <img src={logo} alt="Pokey Logo" width="450px" />
                </div>
                <div className='header-body'>
                 <div className='header-subtext'>
@@ -30,61 +30,64 @@ export default function CardGame() {
 
     const MemoryCards = () => {
 
-        const [pokeyId, setPokeyId] = useState<number>(50)
 
         interface Pokemon {
-            id?: number,
-            name?: string,
-            description?: string,
-            firstColor?: string,
-            secondColor?: string,
+            name: string,
             imageUrl: string,
         }
 
-        const [cards, setCards] = useState<Pokemon>({
-            id: 0,
-            name: "",
-            description: "",
-            firstColor: "",
-            secondColor: "",
-            imageUrl: "",
-        })
+        const [cards, setCards] = useState<Pokemon[]>([])
 
         useEffect(() => {
 
+           const pokeyId = [5, 8, 10, 15, 25];
+
+
             const controller = new AbortController();
+            const signal = controller.signal
 
             async function fetchPokemons() {
-                if(!pokeyId) return;
+
                 try {
-                    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeyId}`, {signal: controller.signal})
-                    if(!response.ok) {
-                         console.log(`Server responded with ${response.status} code.`)
-                         return;
-                    }
-                      const json = await response.json()
-                      const image = json.sprites.other["official-artwork"].front_shiny;
-                      setCards(previousCards => ({...previousCards, imageUrl: image}))
-                } catch (error: unknown) {
-                      if(error instanceof Error && error.name !== "AbortError" ) {
-                        console.log(error)
+                  const fetchPromises = pokeyId.map(async (id) => {
+
+                      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {signal})
+                      if(!response.ok) {
+                           throw new Error(`Server responded with ${response.status} code.`)
                       }
-            } 
-        }
+                        const json = await response.json()
+                        const image = json.sprites.other["official-artwork"].front_shiny;
+                        return { imageUrl: image, name: json.name};
+                  })
 
+                  const pokeyData = await Promise.all(fetchPromises)
+                  setCards(pokeyData)
+                  
+                } catch (error: unknown) {
+                    if(error instanceof Error && error.name !== "AbortError" ) {
+                        console.log(error)
+                    }
+                } 
+            }
+            
             fetchPokemons();
-
+            
             return () => {
                 controller.abort()
             }
-        }, [pokeyId])
-
-
+        },[])  
+        
+        console.log(cards)
+        
         return (
             <>
             <div className='memory-container'>
-                <input type="text" name='id' onChange={e => setPokeyId(Number(e.target.value))} />
-                <img src={cards.imageUrl} alt="Pokemon Image" width="150px" />
+                {cards.map((card, index) => (
+                    <div key={index} className='card-container'>
+                        <img src={card.imageUrl} alt={card.name} width="280px" />
+                        <p>{card.name[0].toLocaleUpperCase() + card.name.slice(1)}</p>
+                    </div>
+                ))}
             </div>
             </>
         )
