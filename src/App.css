@@ -47,3 +47,9 @@ body {
   border-radius: 15px;
   color: #fff;
 }
+
+
+.card-container:hover {
+  cursor: pointer;
+  box-shadow: 0px 0px 40px #ffcb05
+}

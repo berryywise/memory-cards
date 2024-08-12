@@ -5,6 +5,7 @@ export default function CardGame() {
 
     const [score, setScore] = useState<number>(0);
     const [highscore, setHighscore] = useState<number>(0);
+    const [currentRound, setCurrentRound] = useState<number>(0);
 
     const Header = () => {
 
@@ -21,6 +22,7 @@ export default function CardGame() {
                <div className='header-score'>
                 <p>Current Score: {score}</p>
                 <p>Highscore: {highscore}</p>
+                <p>Current Round: {score}</p>
                </div>
                </div>
             </div>
@@ -28,7 +30,16 @@ export default function CardGame() {
         )
     }
 
+    const genRandomNumber = () => {
+        return Math.floor(Math.random() * (700 - 1 + 1)) //TODO: fix double numbers in array
+    }
+
+    const genRandomArray = () => {
+        return Array.from({length: 12}, () => genRandomNumber());
+    }
+
     const MemoryCards = () => {
+
 
 
         interface Pokemon {
@@ -37,11 +48,20 @@ export default function CardGame() {
         }
 
         const [cards, setCards] = useState<Pokemon[]>([])
+        const [pokeys, setPokeys] = useState<number[]>([])
+
+        
+        useEffect(() => {
+            
+            const pokeyId = genRandomArray()
+            setPokeys(pokeyId)
+
+        }, [])
+
 
         useEffect(() => {
 
-           const pokeyId = [5, 8, 10, 15, 25];
-
+            if(pokeys.length === 0) return;
 
             const controller = new AbortController();
             const signal = controller.signal
@@ -49,7 +69,7 @@ export default function CardGame() {
             async function fetchPokemons() {
 
                 try {
-                  const fetchPromises = pokeyId.map(async (id) => {
+                  const fetchPromises = pokeys.map(async (id) => {
 
                       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`, {signal})
                       if(!response.ok) {
@@ -75,9 +95,7 @@ export default function CardGame() {
             return () => {
                 controller.abort()
             }
-        },[])  
-        
-        console.log(cards)
+        }, [pokeys])  
         
         return (
             <>
