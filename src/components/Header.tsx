@@ -6,7 +6,7 @@ interface HeaderProps {
 }
 
 
-export const Header: React.FC<HeaderProps> = ({score, highscore, currentRound}) => {
+export const Header: React.FC<HeaderProps> = ({score, highscore}) => {
 
     return (
         <>
