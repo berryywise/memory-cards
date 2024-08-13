@@ -64,8 +64,9 @@ const MemoryCards: React.FC<MemoryProps> = ({score, highscore, clickedCards, set
 
     const resetGame = () => {
         setScore(0)
-        setPokeys(genRandomArray());
         setClickedCards([])
+        setCards([])
+        setPokeys(genRandomArray());
     }
 
     //Generates a random amount of integers, and sets the state according.
