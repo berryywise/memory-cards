@@ -10,4 +10,4 @@ Assignment:
 
 - ✅ Now that you’ve thought about the structure of your application, set up the folder structure and start creating the components.
 
-- Style your application so you can show it off!
+- ✅ Style your application so you can show it off!
