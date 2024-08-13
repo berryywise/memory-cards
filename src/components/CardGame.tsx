@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import logo from "../assets/logo.png"
+import pokemongo from "../assets/pokemongo.gif"
 
 export default function CardGame() {
 
     const [score, setScore] = useState<number>(0);
     const [highscore, setHighscore] = useState<number>(0);
     const [currentRound, setCurrentRound] = useState<number>(0);
+    const [isActive, setIsActive] = useState<boolean>(true);
 
     const Header = () => {
 
@@ -38,9 +40,8 @@ export default function CardGame() {
         return Array.from({length: 12}, () => genRandomNumber());
     }
 
+
     const MemoryCards = () => {
-
-
 
         interface Pokemon {
             name: string,
@@ -49,8 +50,17 @@ export default function CardGame() {
 
         const [cards, setCards] = useState<Pokemon[]>([])
         const [pokeys, setPokeys] = useState<number[]>([])
+        const [loading, setLoading] = useState<boolean>(false);
 
-        
+        const handleClick = (index: number) => {
+
+            const shuffledArray = [...cards].sort(() => 0.5 - Math.random())
+
+            setCards(shuffledArray)
+
+        }
+
+        //Generates a random amount of integers, and sets the state according.
         useEffect(() => {
             
             const pokeyId = genRandomArray()
@@ -58,10 +68,12 @@ export default function CardGame() {
 
         }, [])
 
-
+        //Fetches 12 random pokemons from API with the generated numbers.
         useEffect(() => {
 
             if(pokeys.length === 0) return;
+
+            setLoading(true);
 
             const controller = new AbortController();
             const signal = controller.signal
@@ -82,6 +94,7 @@ export default function CardGame() {
 
                   const pokeyData = await Promise.all(fetchPromises)
                   setCards(pokeyData)
+                  setLoading(false);
                   
                 } catch (error: unknown) {
                     if(error instanceof Error && error.name !== "AbortError" ) {
@@ -100,8 +113,9 @@ export default function CardGame() {
         return (
             <>
             <div className='memory-container'>
+                {loading && <img src={pokemongo} alt='loading image'></img>}
                 {cards.map((card, index) => (
-                    <div key={index} className='card-container'>
+                    <div key={index} onClick={() => handleClick(index)} className='card-container'>
                         <img src={card.imageUrl} alt={card.name} width="280px" />
                         <p>{card.name[0].toLocaleUpperCase() + card.name.slice(1)}</p>
                     </div>
