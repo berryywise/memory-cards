@@ -26,9 +26,6 @@ const MemoryCards: React.FC<MemoryProps> = ({score, highscore, clickedCards, set
     const [message, setMessage] = useState<string>("");
     const [error, setError] = useState<string>("")
 
-    //TODO: on second card, check for previous card in array ? if name is in array, fail game, else continue
-    //TODO: when user reacher score of 12, end game. show win message, show next round, fetch new pokeys, update round from 1 > 2,
-
 
     //Shuffles the cards and executes game logic
     const handleClick = (index: number) => {
@@ -40,6 +37,8 @@ const MemoryCards: React.FC<MemoryProps> = ({score, highscore, clickedCards, set
 
 
     }
+
+    //Checks if there is no double pokemon name in state, if it does, the game ends, else the logic continues.
 
     const handleGame = (index: string) => {
 
@@ -57,6 +56,8 @@ const MemoryCards: React.FC<MemoryProps> = ({score, highscore, clickedCards, set
         console.log(clickedCards)
 
     }
+
+    //Listens if score is equal to 12 and re-renders the dom instantly with a new game.
 
     useEffect(() => {
         if(score === 12) {
