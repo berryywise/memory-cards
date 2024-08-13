@@ -54,7 +54,7 @@ const MemoryCards: React.FC<MemoryProps> = ({score, highscore, clickedCards, set
         setScore(score + 1);
         setClickedCards([...clickedCards, index])
 
-        if(score = 12) {
+        if(score === 12) {
             setHighscore(highscore + 1);
             setMessage("Congratulations, you finished the current level!")
             resetGame();
